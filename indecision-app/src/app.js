@@ -6,7 +6,7 @@ class IndecisionApp extends React.Component {
       this.handlePick = this.handlePick.bind(this)
       this.handleAddOption = this.handleAddOption.bind(this)
       this.state = {
-        options: []
+        options: props.options
       };
         
     }
@@ -41,13 +41,14 @@ class IndecisionApp extends React.Component {
     }
   
     render() {
-        const title = 'Indecision';
+      // Removed title becauase we set up a default in the Stateless Header component
+        // const title = 'Indecision';
         const subtitle = 'Put your life in the hands of a computer';
         return (
             <div>
             {/* This a prop almost like an ID this allows us to have things change for example if we wanted the header to change based on if we were on the home page or about page we'd make a prop in this case "title" is our prop and its holding the string "Test Value"
               <Header title='Test Value'/>  */}
-              <Header title={title} subtitle={subtitle}/> 
+              <Header subtitle={subtitle}/> 
               <Action hasOptions={this.state.options.length > 0}
               // We set this handle prop up with the method handlePick we then moved the prop to the Actions component to have access to it with "onClick={this.props.handlePick}" so when we clicked it would run the method we just made that allowed us to pick a random number
               handlePick={this.handlePick}
@@ -63,14 +64,22 @@ class IndecisionApp extends React.Component {
         );
     }
 }
+IndecisionApp.defaultProps = {
+  options: []
+};
 // This stateless function replaced code right below it
 const Header = (props) => {
   return (
     <div>
       <h1>{props.title}</h1>
-      <h2>{props.subtitle}</h2>
+      {/* if props.subtitle is provided then run props.subtitle if not don't */}
+      {props.subtitle && <h2>{props.subtitle}</h2>}
     </div>
   )
+};
+// set default title prop which means we can go ahhead and remove title from Header componenet (props.title)
+Header.defaultProps = {
+  title: 'Indecision'
 };
 
 

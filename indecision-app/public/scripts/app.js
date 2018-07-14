@@ -21,7 +21,7 @@ var IndecisionApp = function (_React$Component) {
     _this.handlePick = _this.handlePick.bind(_this);
     _this.handleAddOption = _this.handleAddOption.bind(_this);
     _this.state = {
-      options: []
+      options: props.options
     };
 
     return _this;
@@ -66,12 +66,13 @@ var IndecisionApp = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var title = 'Indecision';
+      // Removed title becauase we set up a default in the Stateless Header component
+      // const title = 'Indecision';
       var subtitle = 'Put your life in the hands of a computer';
       return React.createElement(
         'div',
         null,
-        React.createElement(Header, { title: title, subtitle: subtitle }),
+        React.createElement(Header, { subtitle: subtitle }),
         React.createElement(Action, { hasOptions: this.state.options.length > 0
           // We set this handle prop up with the method handlePick we then moved the prop to the Actions component to have access to it with "onClick={this.props.handlePick}" so when we clicked it would run the method we just made that allowed us to pick a random number
           , handlePick: this.handlePick
@@ -89,9 +90,11 @@ var IndecisionApp = function (_React$Component) {
 
   return IndecisionApp;
 }(React.Component);
+
+IndecisionApp.defaultProps = {
+  options: []
+};
 // This stateless function replaced code right below it
-
-
 var Header = function Header(props) {
   return React.createElement(
     'div',
@@ -101,12 +104,16 @@ var Header = function Header(props) {
       null,
       props.title
     ),
-    React.createElement(
+    props.subtitle && React.createElement(
       'h2',
       null,
       props.subtitle
     )
   );
+};
+// set default title prop which means we can go ahhead and remove title from Header componenet (props.title)
+Header.defaultProps = {
+  title: 'Indecision'
 };
 
 // class Header extends React.Component {
