@@ -63,21 +63,43 @@ class IndecisionApp extends React.Component {
         );
     }
 }
+// This stateless function replaced code right below it
+const Header = (props) => {
+  return (
+    <div>
+      <h1>{props.title}</h1>
+      <h2>{props.subtitle}</h2>
+    </div>
+  )
+};
 
-class Header extends React.Component {
-    render() {
-        return(
-        <div>
-        {/* to access/call your prop you made in the indecsion app you use the keyword "this"followed by "props" followed by the prop name/key in this case its "title" all put inside the curly braces "{}" props can be also brought in from Variables for example cons ttile = "Indecision"*/}
-    <h1>{this.props.title}</h1>
-    <h2>{this.props.subtitle}</h2>
-        </div>
-   )
-  }
+
+// class Header extends React.Component {
+//     render() {
+//         return(
+//         <div>
+//         {/* to access/call your prop you made in the indecsion app you use the keyword "this"followed by "props" followed by the prop name/key in this case its "title" all put inside the curly braces "{}" props can be also brought in from Variables for example cons ttile = "Indecision"*/}
+//     <h1>{this.props.title}</h1>
+//     <h2>{this.props.subtitle}</h2>
+//         </div>
+//    )
+//   }
+// }
+
+// This stateless function replaced code right below it
+const Action = (props) => {
+  return (
+    <div>
+      <button
+        onClick={props.handlePick}
+        disabled={!props.hasOptions}
+        > What Should I Do?
+      </button>
+    </div>
+  )
 }
-// Setup options prop for Options Component
-// Render the length of the array in Options
 
+/*
 class Action extends React.Component {
     // This is a method below which is called on the button
     render() {
@@ -92,6 +114,8 @@ class Action extends React.Component {
         )
     }
 }
+*/
+
 /* Mapped over the options array then for ever option in the array we returned them as p tags shorthand version below
 
 "this.props.options.map((option) => <p key={Math.random()}>{option}</p>)"
@@ -100,6 +124,21 @@ class Action extends React.Component {
 // Challenege add Remoev all button
 // Setup handleRemoveAll
 // setup onClick to fire the method
+
+// This stateless function replaced code right below it
+const Options = (props) => {
+  return (
+    <div>
+    <button onClick={props.handleDeleteOptions}>Remove All</button>
+       {
+        props.options.map((option) => {
+          return <Option key={Math.random()} optionText={option} /> })
+       }
+       </div>
+   );
+};
+
+/*
 
 class Options extends React.Component {
   // deleted constructor function because we didnt need to bind a method
@@ -116,6 +155,19 @@ class Options extends React.Component {
         );
     }
 }
+
+*/
+
+// This stateless function replaced code right below it
+const Option = (props) => {
+  return (
+    <div>
+     {props.optionText}   
+    </div>
+  )
+}
+
+/*
  class Option extends React.Component {
      render() {
          return (
@@ -125,6 +177,9 @@ class Options extends React.Component {
          )
      }
  }
+
+ */
+
 // Option -> option component
 
 
@@ -168,6 +223,24 @@ class AddOption extends React.Component {
 
 // class Options--> options componenet here
 // addOptions Component -> this will allow the form
+
+// Stateless functional component below
+// Way faster
+// Still allows props
+// No acces to 'this' so we pass them (props) into the function as the first argument
+// call props as props.propname for example below we used props.name
+// no render()
+/*
+const User = (props) => {
+  return (
+    <div>
+     <p>Name: {props.name} </p>
+     <p>Age: {props.age} </p>    
+    </div>
+)
+};
+
+*/
 
 ReactDOM.render(
     <IndecisionApp />,
