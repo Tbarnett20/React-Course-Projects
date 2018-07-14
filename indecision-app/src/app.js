@@ -2,11 +2,44 @@ class IndecisionApp extends React.Component {
     constructor(props){
       super(props);
       // changed options into state because we will be updating this information
+      this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
+      this.handlePick = this.handlePick.bind(this)
+      this.handleAddOption = this.handleAddOption.bind(this)
       this.state = {
-        options: ['Thing one','Thing two','Thing four']
+        options: []
       };
         
     }
+    handleDeleteOptions() {
+      this.setState(() => {
+        return {
+          options: []
+        };
+      });
+    }
+    // this was used as a prop on the Action component/we also .bind(this) it up top
+    handlePick() {
+      const randomNum = Math.floor(Math.random() * this.state.options.length);
+      const option = this.state.options[randomNum];
+       alert(option);
+    }
+    // Create new method handlePick pass down to Action and bind it up here^^^
+    // will randomly pick an option and alert it
+
+    handleAddOption(option) {
+      if (!option) {
+        return 'Enter valid value to add item';
+      } else if (this.state.options.indexOf(option) > - 1) {
+        return 'This option already exists';
+      } 
+
+      this.setState((prevState) => {
+        return {
+          options: prevState.options.concat(option)
+        }
+      })
+    }
+  
     render() {
         const title = 'Indecision';
         const subtitle = 'Put your life in the hands of a computer';
@@ -15,9 +48,17 @@ class IndecisionApp extends React.Component {
             {/* This a prop almost like an ID this allows us to have things change for example if we wanted the header to change based on if we were on the home page or about page we'd make a prop in this case "title" is our prop and its holding the string "Test Value"
               <Header title='Test Value'/>  */}
               <Header title={title} subtitle={subtitle}/> 
-              <Action hasOptions={this.state.options.length > 0} />
-              <Options options ={this.state.options}/>
-              <AddOption />
+              <Action hasOptions={this.state.options.length > 0}
+              // We set this handle prop up with the method handlePick we then moved the prop to the Actions component to have access to it with "onClick={this.props.handlePick}" so when we clicked it would run the method we just made that allowed us to pick a random number
+              handlePick={this.handlePick}
+              />
+              <Options 
+              options ={this.state.options}
+              handleDeleteOptions={this.handleDeleteOptions}
+              />
+              <AddOption
+              handleAddOption={this.handleAddOption}
+              />
             </div>
         );
     }
@@ -39,14 +80,11 @@ class Header extends React.Component {
 
 class Action extends React.Component {
     // This is a method below which is called on the button
-    handlePick() {
-        alert('handlePick')
-    }
     render() {
         return (
             <div>
               <button
-                onClick={this.handlePick}
+                onClick={this.props.handlePick}
                 disabled={!this.props.hasOptions}
                 > What Should I Do?
               </button>
@@ -64,21 +102,12 @@ class Action extends React.Component {
 // setup onClick to fire the method
 
 class Options extends React.Component {
-  /* Overides constructor to fix the 'this' binding so we could access to it and super allows us to have acces to this.props.  Then we set the handle to itself with .bind(this) which just makes sure wherever we call this its in context
-  */
- 
-    constructor(props) {
-      super(props);
-      this.handleRemoveAll = this.handleRemoveAll.bind(this);
-    }
-    // This is a method below it gets called with onClick={this.handleRemoveAll} dont call as function
-    handleRemoveAll() {
-        console.log(this.props.options)
-    }
+  // deleted constructor function because we didnt need to bind a method
+
     render() {
         return (
          <div>
-         <button onClick={this.handleRemoveAll}>Remove All</button>
+         <button onClick={this.props.handleDeleteOptions}>Remove All</button>
             {
              this.props.options.map((option) => {
                return <Option key={Math.random()} optionText={option} /> })
@@ -103,19 +132,30 @@ class Options extends React.Component {
 // wire up onSubmit
 // handleAddOption -> fetch the value typed -> if value, then alert
 class AddOption extends React.Component {
+  constructor(props) {
+    super(props)
+    // since we used this inside of handleAddOption we need to set up a constructor/ so before render()
+    this.handleAddOption = this.handleAddOption.bind(this)
+    this.state = {
+      error: undefined
+    };
+  }
     handleAddOption(event) {
       event.preventDefault();
       // "Event.target" is the form element
       // then uses 'Elements" to go into the "input" by its name which is 'option" then we grab its value property
       const option = event.target.elements.option.value.trim();
+      const error = this.props.handleAddOption(option);
       // if theres an option then do something which is alert that option
-      if (option) {
-        alert(option);
-      }
+      
+      this.setState(() => {
+        return { error: error }
+      })
     }
     render() {
         return (
             <div>
+            {this.state.error && <p>{this.state.error}</p>}
             {/* this calls the handleAddOption method from above */}
               <form onSubmit={this.handleAddOption}>
                 <input type="text" name="option" />
