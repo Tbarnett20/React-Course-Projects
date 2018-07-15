@@ -12,7 +12,7 @@ class Counter extends React.Component {
         this.handleReset = this.handleReset.bind(this);
         this.state = {
             // use the the default prop here
-          count: props.count
+          count: 0
         };
     }
     handleAddOne() {
@@ -54,10 +54,6 @@ class Counter extends React.Component {
         );
     }
 }
-// default prop here
-Counter.defaultProps = {
-    count: 0
-};
 
 ReactDOM.render(
     // default prop setup here and we start on whatever number we pick

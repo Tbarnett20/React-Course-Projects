@@ -7,7 +7,7 @@ class IndecisionApp extends React.Component {
       this.handleAddOption = this.handleAddOption.bind(this)
       this.handleDeleteOption = this.handleDeleteOption.bind(this)
       this.state = {
-        options: props.options
+        options: []
       };
     }
     //  lifecyccle methods only accessible in class components
@@ -104,9 +104,6 @@ class IndecisionApp extends React.Component {
         );
     }
 }
-IndecisionApp.defaultProps = {
-  options: []
-};
 // This stateless function replaced code right below it
 const Header = (props) => {
   return (
