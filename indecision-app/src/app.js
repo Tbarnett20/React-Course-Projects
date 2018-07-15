@@ -9,7 +9,17 @@ class IndecisionApp extends React.Component {
       this.state = {
         options: props.options
       };
-        
+    }
+    //  lifecyccle methods only accessible in class components
+    componentDidMount() {
+      console.log('fetching data');
+    }
+    // comes in handy when figuring out when your component did change
+    componentDidUpdate (prevProps, prevState) {
+      console.log('saving data');
+    }
+    componentWillUnmount() {
+      console.log('componentWillUnmount');
     }
     handleDeleteOptions() {
       // This is the shorthand version of the code below it

@@ -24,11 +24,29 @@ var IndecisionApp = function (_React$Component) {
     _this.state = {
       options: props.options
     };
-
     return _this;
   }
+  //  lifecyccle methods only accessible in class components
+
 
   _createClass(IndecisionApp, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      console.log('fetching data');
+    }
+    // comes in handy when figuring out when your component did change
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      console.log('saving data');
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      console.log('componentWillUnmount');
+    }
+  }, {
     key: 'handleDeleteOptions',
     value: function handleDeleteOptions() {
       // This is the shorthand version of the code below it
