@@ -8,87 +8,345 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// count - setup default prop value to 0
+var IndecisionApp = function (_React$Component) {
+  _inherits(IndecisionApp, _React$Component);
 
+  function IndecisionApp(props) {
+    _classCallCheck(this, IndecisionApp);
 
-var Counter = function (_React$Component) {
-  _inherits(Counter, _React$Component);
+    // changed options into state because we will be updating this information
+    var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
 
-  function Counter(props) {
-    _classCallCheck(this, Counter);
-
-    // Create 3 methods: handleAddOne, handleMinusOne, handleReset
-    // Use console.log to print method name
-    //  Wire up onClick and 'bind' in the 'constructor'
-    var _this = _possibleConstructorReturn(this, (Counter.__proto__ || Object.getPrototypeOf(Counter)).call(this, props));
-
-    _this.handleAddOne = _this.handleAddOne.bind(_this);
-    _this.handleMinusOne = _this.handleMinusOne.bind(_this);
-    _this.handleReset = _this.handleReset.bind(_this);
+    _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
+    _this.handlePick = _this.handlePick.bind(_this);
+    _this.handleAddOption = _this.handleAddOption.bind(_this);
+    _this.handleDeleteOption = _this.handleDeleteOption.bind(_this);
     _this.state = {
-      // use the the default prop here
-      count: 0
+      options: []
     };
     return _this;
   }
+  //  lifecyccle methods only accessible in class components
 
-  _createClass(Counter, [{
+
+  _createClass(IndecisionApp, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       try {
-        var stringCount = localStorage.getItem('count');
-        var count = parseInt(stringCount, 10);
+        var json = localStorage.getItem('options');
+        var options = JSON.parse(json);
 
-        if (!isNaN(count)) {
+        if (options) {
           this.setState(function () {
-            return { count: count };
+            return { options: options };
           });
         }
       } catch (events) {
         // do nothing at all if data is invalid
       }
     }
+    // comes in handy when figuring out when your component did change
+
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      if (prevState.count !== this.state.count) {
-        localStorage.setItem('count', this.state.count);
+      if (prevState.options.length !== this.state.options.length) {
+        var json = JSON.stringify(this.state.options);
+        localStorage.setItem('options', json);
       }
     }
   }, {
-    key: 'handleAddOne',
-    value: function handleAddOne() {
-      this.setState(function (prevState) {
-        return {
-          count: prevState.count + 1
-        };
-      });
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      console.log('componentWillUnmount');
     }
-    // 
+  }, {
+    key: 'handleDeleteOptions',
+    value: function handleDeleteOptions() {
+      // This is the shorthand version of the code below it
+      this.setState(function () {
+        return { options: [] };
+      });
+      // ^^^ This code above is the same as below
+      /* this.setState(() => {
+         return {
+           options: []
+         };
+       });
+       */
+    }
+    // not to be confused with handleDeleteOption(S)
 
   }, {
-    key: 'handleMinusOne',
-    value: function handleMinusOne() {
-      /* when we wanna change the component state we use "this.setState" inside of the handler in this case its handleMinusOne()
-      // We then define an updater function inside the setState() method which lets us return an object and on the object we can define the State values we wanna tweak for example "count:"
-      */
+    key: 'handleDeleteOption',
+    value: function handleDeleteOption(optionToRemove) {
       this.setState(function (prevState) {
         return {
-          // prevState gets the previous Count/state and allows use to change it
-          count: prevState.count - 1
+          options: prevState.options.filter(function (option) {
+            return optionToRemove !== option;
+          })
+
         };
       });
     }
+    // this was used as a prop on the Action component/we also .bind(this) it up top
+
   }, {
-    key: 'handleReset',
-    value: function handleReset() {
-      this.setState(function () {
-        // no need to define prevState since we are resetting count to 0
-        return {
-          count: 0
-        };
+    key: 'handlePick',
+    value: function handlePick() {
+      var randomNum = Math.floor(Math.random() * this.state.options.length);
+      var option = this.state.options[randomNum];
+      alert(option);
+    }
+    // Create new method handlePick pass down to Action and bind it up here^^^
+    // will randomly pick an option and alert it
+
+  }, {
+    key: 'handleAddOption',
+    value: function handleAddOption(option) {
+      if (!option) {
+        return 'Enter valid value to add item';
+      } else if (this.state.options.indexOf(option) > -1) {
+        return 'This option already exists';
+      }
+      // This is the shorthand version of the code below it
+      this.setState(function (prevState) {
+        return { options: prevState.options.concat(option) };
       });
-      // this new setState inherits the new coun:0 set in the previous state above
+      /*
+      this.setState((prevState) => {
+        return {
+          options: prevState.options.concat(option)
+        }
+      })
+      */
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      // Removed title becauase we set up a default in the Stateless Header component
+      // const title = 'Indecision';
+      var subtitle = 'Put your life in the hands of a computer';
+      return React.createElement(
+        'div',
+        null,
+        React.createElement(Header, { subtitle: subtitle }),
+        React.createElement(Action, { hasOptions: this.state.options.length > 0
+          // We set this handle prop up with the method handlePick we then moved the prop to the Actions component to have access to it with "onClick={this.props.handlePick}" so when we clicked it would run the method we just made that allowed us to pick a random number
+          , handlePick: this.handlePick
+        }),
+        React.createElement(Options, {
+          options: this.state.options,
+          handleDeleteOptions: this.handleDeleteOptions,
+          handleDeleteOption: this.handleDeleteOption
+        }),
+        React.createElement(AddOption, {
+          handleAddOption: this.handleAddOption
+        })
+      );
+    }
+  }]);
+
+  return IndecisionApp;
+}(React.Component);
+// This stateless function replaced code right below it
+
+
+var Header = function Header(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'h1',
+      null,
+      props.title
+    ),
+    props.subtitle && React.createElement(
+      'h2',
+      null,
+      props.subtitle
+    )
+  );
+};
+// set default title prop which means we can go ahhead and remove title from Header componenet (props.title)
+Header.defaultProps = {
+  title: 'Indecision'
+};
+
+// class Header extends React.Component {
+//     render() {
+//         return(
+//         <div>
+//         {/* to access/call your prop you made in the indecsion app you use the keyword "this"followed by "props" followed by the prop name/key in this case its "title" all put inside the curly braces "{}" props can be also brought in from Variables for example cons ttile = "Indecision"*/}
+//     <h1>{this.props.title}</h1>
+//     <h2>{this.props.subtitle}</h2>
+//         </div>
+//    )
+//   }
+// }
+
+// This stateless function replaced code right below it
+var Action = function Action(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'button',
+      {
+        onClick: props.handlePick,
+        disabled: !props.hasOptions
+      },
+      ' What Should I Do?'
+    )
+  );
+};
+
+/*
+class Action extends React.Component {
+    // This is a method below which is called on the button
+    render() {
+        return (
+            <div>
+              <button
+                onClick={this.props.handlePick}
+                disabled={!this.props.hasOptions}
+                > What Should I Do?
+              </button>
+            </div>
+        )
+    }
+}
+*/
+
+/* Mapped over the options array then for ever option in the array we returned them as p tags shorthand version below
+
+"this.props.options.map((option) => <p key={Math.random()}>{option}</p>)"
+*/
+
+// Challenege add Remoev all button
+// Setup handleRemoveAll
+// setup onClick to fire the method
+
+// This stateless function replaced code right below it
+var Options = function Options(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      'button',
+      { onClick: props.handleDeleteOptions },
+      'Remove All'
+    ),
+    props.options.length === 0 && React.createElement(
+      'p',
+      null,
+      'Please add an option to get started!'
+    ),
+    props.options.map(function (option) {
+      return React.createElement(Option, {
+        key: Math.random(),
+        optionText: option,
+        handleDeleteOption: props.handleDeleteOption
+      });
+    })
+  );
+};
+
+/*
+
+class Options extends React.Component {
+  // deleted constructor function because we didnt need to bind a method
+
+    render() {
+        return (
+         <div>
+         <button onClick={this.props.handleDeleteOptions}>Remove All</button>
+            {
+             this.props.options.map((option) => {
+               return <Option key={Math.random()} optionText={option} /> })
+            }
+            </div>
+        );
+    }
+}
+
+*/
+
+// This stateless function replaced code right below it
+var Option = function Option(props) {
+  return React.createElement(
+    'div',
+    null,
+    props.optionText,
+    React.createElement(
+      'button',
+      {
+        onClick: function onClick(events) {
+          props.handleDeleteOption(props.optionText);
+        }
+      },
+      'Remove'
+    )
+  );
+};
+
+/*
+ class Option extends React.Component {
+     render() {
+         return (
+             <div>
+              {this.props.optionText}   
+             </div>
+         )
+     }
+ }
+
+ */
+
+// Option -> option component
+
+
+//  Challeneg setup form with text and sumbit button
+// wire up onSubmit
+// handleAddOption -> fetch the value typed -> if value, then alert
+
+var AddOption = function (_React$Component2) {
+  _inherits(AddOption, _React$Component2);
+
+  function AddOption(props) {
+    _classCallCheck(this, AddOption);
+
+    // since we used this inside of handleAddOption we need to set up a constructor/ so before render()
+    var _this2 = _possibleConstructorReturn(this, (AddOption.__proto__ || Object.getPrototypeOf(AddOption)).call(this, props));
+
+    _this2.handleAddOption = _this2.handleAddOption.bind(_this2);
+    _this2.state = {
+      error: undefined
+    };
+    return _this2;
+  }
+
+  _createClass(AddOption, [{
+    key: 'handleAddOption',
+    value: function handleAddOption(event) {
+      event.preventDefault();
+      // "Event.target" is the form element
+      // then uses 'Elements" to go into the "input" by its name which is 'option" then we grab its value property
+      var option = event.target.elements.option.value.trim();
+      var error = this.props.handleAddOption(option);
+      // if theres an option then do something which is alert that option
+
+      // This is the shorthand version of the code below it
+      this.setState(function () {
+        return { error: error };
+      });
+      /*this.setState(() => {
+        return { error: error }
+      })
+      */
+      if (!error) {
+        event.target.elements.option.value = '';
+      }
     }
   }, {
     key: 'render',
@@ -96,96 +354,47 @@ var Counter = function (_React$Component) {
       return React.createElement(
         'div',
         null,
-        React.createElement(
-          'h1',
+        this.state.error && React.createElement(
+          'p',
           null,
-          ' Count: ',
-          this.state.count,
-          ' '
+          this.state.error
         ),
         React.createElement(
-          'button',
-          { onClick: this.handleAddOne },
-          '+1'
-        ),
-        React.createElement(
-          'button',
-          { onClick: this.handleMinusOne },
-          '-1'
-        ),
-        React.createElement(
-          'button',
-          { onClick: this.handleReset },
-          'RESET'
+          'form',
+          { onSubmit: this.handleAddOption },
+          React.createElement('input', { type: 'text', name: 'option' }),
+          React.createElement(
+            'button',
+            null,
+            'Add Option'
+          )
         )
       );
     }
   }]);
 
-  return Counter;
+  return AddOption;
 }(React.Component);
 
-ReactDOM.render(
-// default prop setup here and we start on whatever number we pick
-React.createElement(Counter, { count: 5 }), document.getElementById('app'));
+// class Options--> options componenet here
+// addOptions Component -> this will allow the form
 
-/* // Challenge TIME!!
-// Make button "-1" setup minusOne function and register - log "minusOne"
-// Make reset button "reset" - setup reset function - log "reset"
-
-let count = 0;
-const addOne = () => {
-    count++;
-    // count =  count + 1;
-    renderCounterApp();
-}
-
-const minusOne = () => {
-    count--;
-    renderCounterApp();
+// Stateless functional component below
+// Way faster
+// Still allows props
+// No acces to 'this' so we pass them (props) into the function as the first argument
+// call props as props.propname for example below we used props.name
+// no render()
+/*
+const User = (props) => {
+  return (
+    <div>
+     <p>Name: {props.name} </p>
+     <p>Age: {props.age} </p>    
+    </div>
+)
 };
-
-const reset = () => {
-    count = 0;
-    renderCounterApp();
-};
-
-const  templateTwo = (
- <div>
-    <h1> Count: {count}</h1>
-    <button onClick={addOne}>+1</button>
-    <button onClick={minusOne}>-1</button>
-    <button onClick={reset}>RESET</button>
- </div>
-);
-
-console.log(templateTwo);
-
-const appRoot = document.getElementById('app');
-
-ReactDOM.render(
-  templateTwo,
-  appRoot  
-);
-
-// JSX does not have built in data biniding 
-
-
-const renderCounterApp = () => {
-    const  templateTwo = (
-        <div>
-           <h1> Count: {count}</h1>
-           <button onClick={addOne}>+1</button>
-           <button onClick={minusOne}>-1</button>
-           <button onClick={reset}>RESET</button>
-        </div>
-       );
-       ReactDOM.render(
-        templateTwo,
-        appRoot  
- );
-};
-
-renderCounterApp();
 
 */
+
+ReactDOM.render(React.createElement(IndecisionApp, null), document.getElementById('app'));
