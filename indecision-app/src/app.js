@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-const template =  <p>THIS IS JSX FROM WEBPACK</p>;
+import IndecisionApp from './components/IndecisionApp'
 
 ReactDOM.render(
-  template,
+  <IndecisionApp />,
   document.getElementById('app')
 )
