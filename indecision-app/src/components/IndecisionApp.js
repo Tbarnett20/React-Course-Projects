@@ -3,10 +3,12 @@ import AddOption from './AddOption';
 import Options from './Options';
 import Action from './Action';
 import Header from './header';
+import OptionModal from './OptionModal'
 
 export default class IndecisionApp extends React.Component {
   state = {
-    options: []
+    options: [],
+    selectedOption: undefined
   };
   handleDeleteOptions = () => {
     // This is the shorthand version of the code below it
@@ -32,7 +34,8 @@ export default class IndecisionApp extends React.Component {
   handlePick = () => {
     const randomNum = Math.floor(Math.random() * this.state.options.length);
     const option = this.state.options[randomNum];
-     alert(option);
+    // didnt use prevState because we are overridng and dont care about what the original value was
+    this.setState(() => ({ selectedOption: option}));
   };
   // Create new method handlePick pass down to Action and bind it up here^^^
   // will randomly pick an option and alert it
@@ -53,6 +56,11 @@ export default class IndecisionApp extends React.Component {
     })
     */
   };
+
+  // Modal Prop
+  handleModal = () => {
+    this.setState(() => ({ selectedOption: undefined}));
+  }
 
   //  lifecyccle methods only accessible in class components
   componentDidMount() {
@@ -99,6 +107,10 @@ export default class IndecisionApp extends React.Component {
             />
             <AddOption
             handleAddOption={this.handleAddOption}
+            />
+            <OptionModal
+            selectedOption={this.state.selectedOption}
+            handleModal={this.handleModal}
             />
           </div>
       );
