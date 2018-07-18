@@ -5,17 +5,55 @@ import Action from './Action';
 import Header from './header';
 
 export default class IndecisionApp extends React.Component {
-  constructor(props){
-    super(props);
-    // changed options into state because we will be updating this information
-    this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
-    this.handlePick = this.handlePick.bind(this)
-    this.handleAddOption = this.handleAddOption.bind(this)
-    this.handleDeleteOption = this.handleDeleteOption.bind(this)
-    this.state = {
-      options: []
-    };
-  }
+  state = {
+    options: []
+  };
+  handleDeleteOptions = () => {
+    // This is the shorthand version of the code below it
+    this.setState(() => ({ options: []}));
+    // ^^^ This code above is the same as below
+   /* this.setState(() => {
+      return {
+        options: []
+      };
+    });
+    */
+  };
+  // not to be confused with handleDeleteOption(S)
+  handleDeleteOption = (optionToRemove) => {
+    this.setState((prevState) => ({
+      options: prevState.options.filter((option) => {
+        return optionToRemove !== option;
+      })
+    
+    }))
+  };
+  // this was used as a prop on the Action component/we also .bind(this) it up top
+  handlePick = () => {
+    const randomNum = Math.floor(Math.random() * this.state.options.length);
+    const option = this.state.options[randomNum];
+     alert(option);
+  };
+  // Create new method handlePick pass down to Action and bind it up here^^^
+  // will randomly pick an option and alert it
+
+  handleAddOption = (option) => {
+    if (!option) {
+      return 'Enter valid value to add item';
+    } else if (this.state.options.indexOf(option) > - 1) {
+      return 'This option already exists';
+    } 
+    // This is the shorthand version of the code below it
+    this.setState((prevState) => ({ options: prevState.options.concat(option)}));
+    /*
+    this.setState((prevState) => {
+      return {
+        options: prevState.options.concat(option)
+      }
+    })
+    */
+  };
+
   //  lifecyccle methods only accessible in class components
   componentDidMount() {
     try {
@@ -39,51 +77,7 @@ export default class IndecisionApp extends React.Component {
   componentWillUnmount() {
     console.log('componentWillUnmount');
   }
-  handleDeleteOptions() {
-    // This is the shorthand version of the code below it
-    this.setState(() => ({ options: []}));
-    // ^^^ This code above is the same as below
-   /* this.setState(() => {
-      return {
-        options: []
-      };
-    });
-    */
-  }
-  // not to be confused with handleDeleteOption(S)
-  handleDeleteOption(optionToRemove) {
-    this.setState((prevState) => ({
-      options: prevState.options.filter((option) => {
-        return optionToRemove !== option;
-      })
-    
-    }))
-  }
-  // this was used as a prop on the Action component/we also .bind(this) it up top
-  handlePick() {
-    const randomNum = Math.floor(Math.random() * this.state.options.length);
-    const option = this.state.options[randomNum];
-     alert(option);
-  }
-  // Create new method handlePick pass down to Action and bind it up here^^^
-  // will randomly pick an option and alert it
 
-  handleAddOption(option) {
-    if (!option) {
-      return 'Enter valid value to add item';
-    } else if (this.state.options.indexOf(option) > - 1) {
-      return 'This option already exists';
-    } 
-    // This is the shorthand version of the code below it
-    this.setState((prevState) => ({ options: prevState.options.concat(option)}));
-    /*
-    this.setState((prevState) => {
-      return {
-        options: prevState.options.concat(option)
-      }
-    })
-    */
-  }
 
   render() {
     // Removed title becauase we set up a default in the Stateless Header component

@@ -4,15 +4,10 @@ import React from 'react';
 // wire up onSubmit
 // handleAddOption -> fetch the value typed -> if value, then alert
 export default class AddOption extends React.Component {
-  constructor(props) {
-    super(props)
-    // since we used this inside of handleAddOption we need to set up a constructor/ so before render()
-    this.handleAddOption = this.handleAddOption.bind(this)
-    this.state = {
-      error: undefined
-    };
-  }
-    handleAddOption(event) {
+  state = {
+    error: undefined
+  };
+    handleAddOption = (event) => {
       event.preventDefault();
       // "Event.target" is the form element
       // then uses 'Elements" to go into the "input" by its name which is 'option" then we grab its value property
@@ -29,7 +24,7 @@ export default class AddOption extends React.Component {
      if (!error) {
       event.target.elements.option.value = '';
      }
-    }
+    };
     render() {
         return (
             <div>
