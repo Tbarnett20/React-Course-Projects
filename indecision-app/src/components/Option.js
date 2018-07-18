@@ -4,9 +4,10 @@ import React from 'react';
 // This stateless function replaced code right below it
 const Option = (props) => {
   return (
-    <div>
-     {props.optionText}
-     <button 
+    <div className="option">
+    <p className="option__text">{props.count}.{props.optionText}</p>
+     <button
+     className="button button--link"
      onClick={(events) => {
         props.handleDeleteOption(props.optionText);
      }}

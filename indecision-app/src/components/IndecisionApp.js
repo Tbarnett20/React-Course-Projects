@@ -95,19 +95,25 @@ export default class IndecisionApp extends React.Component {
           <div>
           {/* This a prop almost like an ID this allows us to have things change for example if we wanted the header to change based on if we were on the home page or about page we'd make a prop in this case "title" is our prop and its holding the string "Test Value"
             <Header title='Test Value'/>  */}
-            <Header subtitle={subtitle}/> 
-            <Action hasOptions={this.state.options.length > 0}
-            // We set this handle prop up with the method handlePick we then moved the prop to the Actions component to have access to it with "onClick={this.props.handlePick}" so when we clicked it would run the method we just made that allowed us to pick a random number
-            handlePick={this.handlePick}
-            />
-            <Options 
-            options ={this.state.options}
-            handleDeleteOptions={this.handleDeleteOptions}
-            handleDeleteOption={this.handleDeleteOption}
-            />
-            <AddOption
-            handleAddOption={this.handleAddOption}
-            />
+            <Header subtitle={subtitle}/>
+            <div className="container">
+              <Action hasOptions={this.state.options.length > 0}
+              // We set this handle prop up with the method handlePick we then moved the prop to the Actions component to have access to it with "onClick={this.props.handlePick}" so when we clicked it would run the method we just made that allowed us to pick a random number
+              handlePick={this.handlePick}
+              />
+
+              <div className="widget">
+                <Options 
+                options ={this.state.options}
+                handleDeleteOptions={this.handleDeleteOptions}
+                handleDeleteOption={this.handleDeleteOption}
+                />
+                <AddOption
+                handleAddOption={this.handleAddOption}
+                />
+              </div>
+
+            </div>
             <OptionModal
             selectedOption={this.state.selectedOption}
             handleModal={this.handleModal}
