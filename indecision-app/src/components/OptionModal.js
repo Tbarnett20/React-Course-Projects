@@ -1,5 +1,5 @@
-import React from 'react';
-import Modal from 'react-modal';
+import React from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react';
+import Modal from '../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-modal';
 
 const OptionModal = (props) => {
   return (
